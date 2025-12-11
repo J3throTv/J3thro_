@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YourName | Live Streamer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050814;
+      --bg-alt: #0b0f1f;
+      --accent: #8b5cf6;
+      --accent-soft: rgba(139, 92, 246, 0.15);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --card-radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1f2937 0, #050814 45%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 960px;
+      background: linear-gradient(135deg, #050814, #020617);
+      border-radius: 28px;
+      padding: 28px 22px 26px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.12), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(129, 140, 248, 0.14), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.2), transparent 60%);
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      background: conic-gradient(from 200deg, #8b5cf6, #22d3ee, #f472b6, #8b5cf6);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 0%, #1f2937, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .brand-text h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .brand-text p {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-link {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      transition: transform 0.16s ease, box-shadow 0.16s ease,
+        border-color 0.16s ease, background 0.16s ease;
+      box-shadow: 0 0 0 rgba(15, 23, 42, 0);
+      white-space: nowrap;
+    }
+
+    .pill-link span {
+      font-size: 0.86em;
+      opacity: 0.9;
+    }
+
+    .pill-link strong {
+      font-weight: 600;
+    }
+
+    .pill-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.7);
+      border-color: rgba(129, 140, 248, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .pill-link.twitch {
+      border-color: rgba(129, 140, 248, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(129, 140, 248, 0.38), rgba(15, 23, 42, 0.95));
+    }
+
+    .pill-link.live-dot {
+      position: relative;
+      overflow: hidden;
+      border-color: rgba(248, 113, 113, 0.7);
+    }
+
+    .pill-link.live-dot::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #f97373;
+      box-shadow: 0 0 0 6px rgba(248, 113, 113, 0.45);
+      display: inline-block;
+    }
+
+    .pill-link.live-dot span {
+      margin-left: 2px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 780px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .socials {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #020617, #020617);
+      border-radius: var(--card-radius);
+      padding: 14px 14px 13px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .card-title {
+      margin-top: 2px;
+      font-size: 1.02rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-muted);
+    }
+
+    .badge.accent {
+      border-color: rgba(129, 140, 248, 1);
+      color: #c7d2fe;
+      background: rgba(129, 140, 248, 0.15);
+    }
+
+    .player {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      position: relative;
+      aspect-ratio: 16 / 9;
+      margin-bottom: 10px;
+    }
+
+    .player iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .player-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 0 0, rgba(129, 140, 248, 0.2), transparent),
+        radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.18), transparent);
+      mix-blend-mode: screen;
+      opacity: 0.45;
+    }
+
+    .player-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      gap: 10px;
+    }
+
+    .player-footer span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.45);
+    }
+
+    .schedule-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .schedule-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.82rem;
+      padding: 5px 7px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 0 0, rgba(79, 70, 229, 0.16), transparent),
+        rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+    }
+
+    .schedule-item span:first-child {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .schedule-item span:last-child {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .tagline {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .about-highlight {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      margin-top: 4px;
+      font-size: 0.76rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #e5e7eb;
+    }
+
+    footer {
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      padding-top: 9px;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: #a5b4fc;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(129, 140, 248, 0.7);
+    }
+
+    footer a:hover {
+      border-bottom-style: solid;
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        padding: 22px 14px 20px;
+        border-radius: 22px;
+      }
+
+      .card {
+        padding: 12px 10px 11px;
+      }
+
+      .brand-text h1 {
+        font-size: 1.2rem;
+      }
+
+      .avatar {
+        width: 48px;
+        height: 48px;
+      }
+
+      header {
+        margin-bottom: 22px;
+      }
+
+      .pill-link {
+        font-size: 0.74rem;
+      }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="glow"></div>
+    <div class="page-inner">
+      <header>
+        <div class="brand">
+          <div class="avatar">
+            <div class="avatar-inner">
+              <!-- Put your initials here -->
+              YN
+            </div>
+          </div>
+          <div class="brand-text">
+            <h1>YourName</h1>
+            <p>Variety streamer • Chill vibes • High energy moments</p>
+          </div>
+        </div>
+        <div class="socials">
+          <a class="pill-link twitch" href="https://twitch.tv/YOUR_TWITCH_NAME" target="_blank">
+            <span>🔴</span> <strong>Twitch</strong>
+            <span>/ YOUR_TWITCH_NAME</span>
+          </a>
+          <a class="pill-link" href="https://youtube.com/@YOUR_YT" target="_blank">
+            <span>▶</span> <strong>YouTube</strong>
+          </a>
+          <a class="pill-link" href="https://x.com/YOUR_TWITTER" target="_blank">
+            <span>✦</span> <strong>X / Twitter</strong>
+          </a>
+          <a class="pill-link live-dot" href="#schedule">
+            <span>Schedule</span>
+          </a>
+        </div>
+      </header>
+
+      <main>
+        <!-- LEFT: Stream player -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">Live on Twitch</div>
+              <div class="card-title">
+                Catch the stream
+                <span class="badge accent">!socials in chat</span>
+              </div>
+            </div>
+          </div>
+          <div class="player">
+            <!-- Replace YOUR_TWITCH_NAME below -->
+            <iframe
+              src="https://player.twitch.tv/?channel=YOUR_TWITCH_NAME&parent=example.com"
+              allowfullscreen="true"
+              scrolling="no"
+              allow="autoplay; fullscreen">
+            </iframe>
+            <div class="player-overlay"></div>
+          </div>
+          <div class="player-footer">
+            <span>
+              <span class="dot"></span>
+              Usually live around your local evening.
+            </span>
+            <span>Clips &amp; highlights on YouTube →</span>
+          </div>
+        </section>
+
+        <!-- RIGHT: About + schedule -->
+        <section class="card" id="schedule">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">About &amp; Schedule</div>
+              <div class="card-title">
+                When I go live
+                <span class="badge">Times in your time zone</span>
+              </div>
+            </div>
+          </div>
+          <p class="tagline">
+            Hey, I’m <strong>YourName</strong> – I stream shooters, story games, and scuffed
+            challenges. Come hang out, spam emotes, and be part of the chaos.
+            <span class="about-highlight">Family-friendly? Mostly. Chaos? Absolutely.</span>
+          </p>
+
+          <ul class="schedule-list">
+            <li class="schedule-item">
+              <span>Mon, Wed, Fri</span>
+              <span>19:00 – 22:00</span>
+            </li>
+            <li class="schedule-item">
+              <span>Saturday</span>
+              <span>Long stream · 17:00+ </span>
+            </li>
+            <li class="schedule-item">
+              <span>Extras</span>
+              <span>Random bonus streams – join Discord</span>
+            </li>
+          </ul>
+
+          <div class="chips">
+            <span class="chip">🎮 Variety &amp; FPS</span>
+            <span class="chip">💬 Chat-driven content</span>
+            <span class="chip">📺 Edited highlights</span>
+            <span class="chip">🤝 Community events</span>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>© <span id="year"></span> YourName. Powered by coffee &amp; scuffed plays.</span>
+        <span>Made with ❤️ for the stream. <a href="https://twitch.tv/YOUR_TWITCH_NAME" target="_blank">Come say hi.</a></span>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // Auto year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
